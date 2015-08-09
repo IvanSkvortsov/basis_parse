@@ -1,0 +1,7 @@
+Error: [GamessFormat<T>::get_elementName(istream &, vector<string> &)]
+line doesn't match any element name
+file_name : 'HCuNbad2.basis'
+line_number : 31
+line : S   3
+ from SingleBasisSet<T>::import_gamessFormat(char const * __file_name)
+exitCode : 1

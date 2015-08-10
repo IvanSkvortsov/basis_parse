@@ -12,7 +12,7 @@ struct molpro_regex
 {
 	boost::regex first_line, last_line, empty_or_comment, empty_string, comment_only, el, pars, shell, no_L_shell, L_shell;
 	molpro_regex():
-		first_line("^\\s*\\$DATA\\s*(!.*)*$"), last_line("^\\s*\\$END\\s*(!.*)*$"), empty_or_comment("^\\s*(!.*)*$"),
+		first_line("^\\s*\\basis\\s*(!.*)*$"), last_line("^\\s*\\$END\\s*(!.*)*$"), empty_or_comment("^\\s*(!.*)*$"),
 		empty_string("^\\s*$"), comment_only("^\\s*!.*$"), el("^\\s*[a-zA-Z]{4,}.*$"), pars("\\s*[^\\s]+"), 
 		shell("^\\s*([a-zA-Z])\\s+(\\d+)\\s*$"),
 		no_L_shell("^\\s*\\d+\\s+(-?\\d+\\.?\\d+[E|D]?[-|+]?\\d{0,})\\s+(-?\\d+\\.?\\d+[E|D]?[-|+]?\\d{0,})\\s*(!.*)*$"),

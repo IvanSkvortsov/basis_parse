@@ -15,7 +15,7 @@ struct gamess_regex
 		first_line("^\\s*\\$DATA\\s*(!.*)*$"), last_line("^\\s*\\$END\\s*(!.*)*$"), empty_or_comment("^\\s*(!.*)*$"),
 		empty_string("^\\s*$"), comment_only("^\\s*!.*$"), el("^\\s*[a-zA-Z]{4,}.*$"), pars("\\s*[^\\s]+"), 
 		shell("^\\s*([a-zA-Z])\\s+(\\d+)\\s*$"),
-		no_L_shell("^\\s*\\d+\\s+(-?\\d+\\.?\\d+[E|D]?[-|+]?\\d{0,})\\s+(-?\\d+\\.?\\d+[E|D]?[-|+]?\\d{0,})\\s*(!.*)*$"),
+		no_L_shell("^\\s*\\d+\\s+(-?\\d+\\.?\\d+[E|D]?[-|+]?\\d{0,})\\s+(-?\\d+\\.?\\d+[eEdD]?[-|+]?\\d{0,})\\s*(!.*)*$"),
 		L_shell("^\\s*\\d+\\s+(-?\\d+\\.?\\d+[E|D]?[-|+]?\\d{0,})\\s+(-?\\d+\\.?\\d+[E|D]?[-|+]?\\d{0,})\\s+(-?\\d+\\.?\\d+[E|D]?[-|+]?\\d{0,})\\s*(!.*)*$")
 		{}
 };
@@ -44,6 +44,7 @@ int GamessFormat<T>::find_head(std::istream & inp)
 		if( boost::regex_match(str, regx->first_line) )
 			return 0;
 		std::cerr << "Error: [GamessFormat<T>::find_head(istream &)]" << std::endl;
+		std::cerr << "regex.str : \"" << regx->first_line.str() << "\"" << std::endl;
 		this->info_msg(std::cerr);
 		return 1;
 	}
@@ -134,7 +135,7 @@ int GamessFormat<T>::get_elementContent(std::istream & inp, std::vector<std::vec
 		if( boost::regex_match(str, regx->last_line))// last line found
 		{
 			std::cerr << "Warning: [GamessFormat<T>::get_elementContent(istream &, ...)]" << std::endl;
-			std::cerr << "There should be empty line befor key word \"$END\"" << std::endl;
+			std::cerr << "There should be empty line before key word \"$END\"" << std::endl;
 			this->info_msg(std::cerr);
 			elementContent.resize(Lmax+1);
 			return -1;
@@ -142,13 +143,15 @@ int GamessFormat<T>::get_elementContent(std::istream & inp, std::vector<std::vec
 		if( !boost::regex_match(str, result, regx->shell) )
 		{
 			std::cerr << "Error: [GamessFormat<T>::get_elementContent(istream &, ...)]" << std::endl;
-			std::cerr << "line " << this->line_number << " : " << this->line << ", doesn't match any shell" << std::endl;
+			std::cerr << "line doesn't match any shell" << std::endl;
+			this->info_msg(std::cerr);
 			return 1;
 		}
 		if( this->get_LN(L,N) )
 		{
 			std::cerr << "Error: [GamessFormat<T>::get_elementContent(istream &, ...)]" << std::endl;
-			std::cerr << "line " << this->line_number << " : " << this->line << std::endl;
+			std::cerr << "line doesn't match any shell" << std::endl;
+			this->info_msg(std::cerr);
 			std::cerr << "expected format of input : \"shell-name    number-of-primitives\"" << std::endl;
 			return 2;
 		}
@@ -188,8 +191,9 @@ int GamessFormat<T>::get_elementContent(std::istream & inp, std::vector<std::vec
 				basisFunc1.push_back(std::make_pair(Ai, Ci));
 				continue;
 			}
-			std::cerr << "Error: [GamessFormat<T>::get_elementContent(istream &, ...)]" << std::endl;
-			std::cerr << "line " << this->line_number << " : \"" << this->line << "\" doesn't match any shell" << std::endl;
+			std::cerr << "Error: [GamessFormat<T>::get_elementContent(istream &, )]" << std::endl;
+			std::cerr << "line doesn't match any shell" << std::endl;
+			this->info_msg(std::cerr);
 			std::cerr << "reading from file \"" << this->file_name << "\" will be interrupted" << std::endl;
 			return 4;
 		}

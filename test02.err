@@ -1,5 +1,5 @@
 Warning: [GamessFormat<T>::get_elementContent(istream &, ...)]
-There should be empty line befor key word "$END"
+There should be empty line before key word "$END"
 file_name : 'HCuNbad.basis'
 line_number : 98
 line : $END
